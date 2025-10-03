@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Louis Baurmann</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================================
+           RESET & BASE STYLES
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto Mono', 'Courier New', monospace;
+            background: #F5EEDC;
+            color: #1d1d1d;
+            cursor: none;
+            overflow-x: hidden;
+        }
+
+        /* ============================================
+           CUSTOM CURSOR WITH NEON INVERT EFFECT
+           ============================================ */
+        .cursor {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            background: #00FF00; /* Neon green */
+            mix-blend-mode: difference;
+            transition: width 0.3s ease, height 0.3s ease, background 0.2s ease;
+            opacity: 0.9;
+        }
+
+        /* Cursor hover state - expand and change color */
+        .cursor.hover {
+            width: 120px;
+            height: 120px;
+            background: #FF00FF; /* Neon magenta */
+        }
+
+        /* Hide cursor on mobile */
+        @media (max-width: 768px) {
+            .cursor {
+                display: none;
+            }
+            body {
+                cursor: auto;
+            }
+        }
+
+        /* ============================================
+           HEADER / NAVIGATION
+           ============================================ */
+           
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 3rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: transparent;
+        }
+
+        .logo {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            color: #1d1d1d;
+            cursor: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.6;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .info-link,
+        .instagram-link {
+            font-size: 1.2rem;
+            text-decoration: none;
+            color: #1d1d1d;
+            cursor: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .info-link:hover,
+        .instagram-link:hover {
+            opacity: 0.6;
+        }
+
+        .instagram-icon {
+            width: 25px;
+            height: 25px;
+            position: relative;
+            top: 3px;
+        }
+        /* ============================================
+            WORK IN PROGRESS BANNER
+            ============================================ */
+
+        .wip-banner {
+            position: fixed;
+            top: 0; /* Below the header */
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 2rem 5%;
+            font-size: 1.5rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            opacity: 0.5;
+            z-index: 1001;
+            pointer-events: none; /* So it doesn't block clicks */
+            color: red;
+}
+
+        /* ============================================
+           MAIN CONTENT - VERTICAL SCROLL LAYOUT
+           ============================================ */
+        main {
+            padding: 200px 10% 8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 15vh; /* Generous vertical spacing */
+        }
+
+        /* ============================================
+           PROJECT ITEMS - VARIED POSITIONS
+           ============================================ */
+        .project-item {
+            display: flex;
+            flex-direction: column;
+            cursor: none;
+            opacity: 0;
+            transform: translateY(60px);
+            animation: fadeInProject 0.8s ease forwards;
+        }
+
+        /* Alternate positioning for visual interest */
+        .project-item:nth-child(odd) {
+            align-self: flex-start; /* flex-start = left, flex-end = right, center = center */
+            max-width: 65%;
+        }
+
+        .project-item:nth-child(even) {
+            align-self: flex-end;
+            max-width: 70%;
+        }
+
+        .project-item:nth-child(3n) {
+            align-self: center;
+            max-width: 75%;
+        }
+
+        .project-item img {
+            width: 100%; /*controls image width within container */
+            height: auto;
+            display: block;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s ease;
+            object-fit: cover; /* Add this: cover/contain/fill */
+        }
+
+        @keyframes fadeInProject {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s ease;
+        }
+
+        .project-item:hover img {
+            transform: scale(1.01);
+        }
+
+        .project-caption {
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            padding-left: 0.5rem;
+        }
+
+        /* ============================================
+           PROJECT MODAL
+           ============================================ */
+        .project-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #F5EEDC;
+            z-index: 2000;
+            overflow-y: auto;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .project-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .project-content {
+            padding: 140px 15% 8rem;
+        }
+
+        .project-header {
+            margin-bottom: 5rem;
+        }
+
+        .project-title {
+            font-family: 'Rubik Mono One', "monospace";
+            font-size: 5rem;
+            font-weight: 200;
+            margin-bottom: 2rem;
+            letter-spacing: 0.03em;
+            line-height: 1.1;
+        }
+
+        .project-meta {
+            font-size: 1rem;
+            opacity: 0.6;
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+        }
+
+        .project-description {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            max-width: 600px;
+            font-weight: 300;
+        }
+
+        /* Playful image layout in project view */
+        .project-images {
+            display: flex;
+            flex-direction: column;
+            gap: 8vh; /* change gap bewtween images */
+        }
+
+        .project-images img {
+            width: 150%;
+            height: auto;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInImage 0.8s ease forwards;
+        }
+
+        /* Alternate image widths for playfulness */
+        .project-images img:nth-child(odd) {
+            max-width: 100%; /* Change percentage - smaller = narrower */
+            align-self: flex-start; /* Change to center or flex-end */
+        }
+
+        .project-images img:nth-child(even) {
+            max-width: 60%;
+            align-self: flex-end;
+        }
+
+        .project-images img:nth-child(3n) {
+            max-width: 60%;
+            align-self: center;
+        }
+        /* ADD YOUR CUSTOM INDIVIDUAL SIZING HERE */
+        /* These override the default pattern above for specific images */
+        .project-1-img-0 {
+            max-width: 95% !important;
+             align-self: flex-start !important;
+        }
+
+        .project-1-img-1 {
+             max-width: 60% !important;
+             align-self: flex-end !important;
+        }
+
+        .project-2-img-0 {
+            max-width: 100% !important;
+            align-self: center !important;
+        }
+/* End of custom sizing */
+
+@keyframes fadeInImage {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+        @keyframes fadeInImage {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-project {
+            position: fixed;
+            top: 3rem;
+            right: 5%;
+            font-size: 2.5rem;
+            background: none;
+            border: none;
+            cursor: none;
+            z-index: 2001;
+            font-family: 'Roboto Mono', monospace;
+            color: #1d1d1d;
+            transition: opacity 0.3s ease;
+            font-weight: 300;
+        }
+
+        .close-project:hover {
+            opacity: 0.5;
+        }
+
+        /* ============================================
+           INFORMATION PAGE STYLES
+           ============================================ */
+        .info-content {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 5rem;
+        }
+
+        .info-left {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .info-name {
+            font-family: 'Lilita One', sans-serif;
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            letter-spacing: 0.02em;
+            line-height: 1.1;
+        }
+
+        .info-section {
+            margin-bottom: 4rem;
+        }
+
+        .info-section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            opacity: 0.5;
+            margin-bottom: 1rem;
+        }
+
+        .info-section-content {
+            font-size: 1rem;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .info-section-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-section-content li {
+            margin-bottom: 0.8rem;
+        }
+
+        .info-section-content a {
+            color: #1d1d1d;
+            text-decoration: none;
+            border-bottom: 1px solid #1d1d1d;
+            transition: opacity 0.3s ease;
+        }
+
+        .info-section-content a:hover {
+            opacity: 0.5;
+        }
+
+        .info-right {
+            position: sticky;
+            top: 140px;
+        }
+
+        .profile-picture {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* ============================================
+           LOADING INDICATOR
+           ============================================ */
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            font-size: 0.85rem;
+            opacity: 0.4;
+            letter-spacing: 0.1em;
+        }
+        /* ============================================
+            FOOTER
+            ============================================ */
+        footer {
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             justify-content: center;
+             padding: 4rem 5%;
+             font-size: 0.9rem;
+             font-weight: 300;
+             letter-spacing: 0.05em;
+             opacity: 0.6;
+        }
+
+        footer a {
+            color: #1d1d1d;
+         text-decoration: none;
+         border-bottom: 1px solid #1d1d1d;
+            transition: opacity 0.3s ease;
+        }
+
+        footer a:hover {
+            opacity: 0.5;
+        }
+
+        footer p {
+             margin: 0.2rem 0;
+        }
+
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 1024px) {
+            main {
+                padding: 120px 8% 6rem;
+                gap: 10vh;
+            }
+
+            .project-item:nth-child(odd),
+            .project-item:nth-child(even),
+            .project-item:nth-child(3n) {
+                max-width: 85%;
+                align-self: center;
+            }
+
+            .project-content {
+                padding: 120px 10% 6rem;
+            }
+
+            .project-title {
+                font-size: 3.0rem;
+            }
+
+            .info-content {
+                flex-direction: column-reverse;
+                gap: 3rem;
+            }
+
+            .info-right {
+                position: relative;
+                top: 0;
+                align-self: flex-end;
+            }
+
+            .profile-picture {
+                width: 250px;
+                height: 250px;
+            }
+
+            .info-name {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 2rem 6%;
+            }
+
+            main {
+                padding: 100px 6% 5rem;
+                gap: 8vh;
+            }
+
+            .project-item:nth-child(odd),
+            .project-item:nth-child(even),
+            .project-item:nth-child(3n) {
+                max-width: 100%;
+            }
+
+            .project-content {
+                padding: 100px 6% 5rem;
+            }
+
+            .project-title {
+                font-size: 1.0rem;
+            }
+
+            .project-images img:nth-child(odd),
+            .project-images img:nth-child(even),
+            .project-images img:nth-child(3n) {
+                max-width: 100%;
+                align-self: center;
+            }
+
+            .close-project {
+                right: 6%;
+                font-size: 2rem;
+            }
+
+            .profile-picture {
+                width: 200px;
+                height: 200px;
+            }
+
+            .info-name {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Neon Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Header / Navigation -->
+    <header>
+        <a href="#" class="logo" id="home-link">Louis Baurmann</a>
+        <div class="header-right">
+            <a href="#" class="info-link" id="info-link">information</a>
+            <a href="https://instagram.com/louis.eb" target="_blank" class="instagram-link">
+                <svg class="instagram-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+            </a>
+        </div>
+    </header>
+    </header>
+
+    <!-- Work in Progress Banner -->
+    <div class="wip-banner">
+        Work in progress — more coming soon
+    </div>
+
+
+
+    <!-- Main Content - Vertical Scroll -->
+    <main id="main-content">
+        <!-- Projects will be dynamically loaded here -->
+    </main>
+
+    <div class="loading" id="loading">scroll for more</div>
+
+    <!-- Project Modal -->
+    <div class="project-modal" id="project-modal">
+        <button class="close-project" id="close-modal">×</button>
+        <div class="project-content" id="modal-content">
+            <!-- Project details will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Information Modal -->
+    <div class="project-modal" id="info-modal">
+        <button class="close-project" id="close-info">×</button>
+        <div class="project-content">
+            <div class="info-content">
+                <div class="info-left">
+                    <h1 class="info-name">Louis Baurmann</h1>
+                    
+                    <div class="info-section">
+                        <div class="info-section-title">About</div>
+                        <div class="info-section-content">
+                            <p>Architect and designer based in Berlin, focused on creating spaces that bridge functionality and artistic expression. My work explores the intersection of architectural precision and conceptual experimentation.</p>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-section-title">Education</div>
+                        <div class="info-section-content">
+                            <ul>
+                                <li>2020–2024 · Master of Architecture · Technische Universität Berlin</li>
+                                <li>2016–2020 · Bachelor of Architecture · Bauhaus-Universität Weimar</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-section-title">Awards</div>
+                        <div class="info-section-content">
+                            <ul>
+                                <li>2024 · Young Architect Award · German Architecture Association</li>
+                                <li>2023 · Emerging Talent Prize · Berlin Design Week</li>
+                                <li>2022 · Student Excellence Award · Bauhaus-Universität</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-section-title">Publications</div>
+                        <div class="info-section-content">
+                            <ul>
+                                <li>2024 · "Materiality and Memory" · Architectural Review</li>
+                                <li>2023 · "Urban Interventions" · DETAIL Magazine</li>
+                                <li>2022 · Featured in "New Voices in Architecture" · Phaidon Press</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-section-title">Contact</div>
+                        <div class="info-section-content">
+                            <p>For inquiries and collaborations:<br>
+                            <a href="mailto:louis.baurmann@mail.de">louis.baurmann@mail.de</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-right">
+                    <img src="images/profilbild.JPEG" alt="Louis Baurmann" class="profile-picture">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // PROJECT DATA
+        // ============================================
+        const projects = [
+            {
+                id: 1,
+                title: "Winterquartier",
+                year: "2024-",
+                collaborators: "Louis Baurmann, Theo Giersberg",
+                location: "Berlin",
+                description: "A minimalist residential space embracing natural light and organic materials. The design prioritizes simplicity while creating warm, inviting living spaces that connect seamlessly with the surrounding landscape.",
+                thumbnail: "images/project1.png",
+                images: [
+                    "images/project1.png",
+                    "images/project1.1.png",
+                    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1400",
+                    "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1400"
+                ]
+            },
+            {
+                id: 2,
+                title: "Urban Loft",
+                year: "2023",
+                location: "Berlin",
+                description: "Industrial heritage meets contemporary living. Raw concrete and steel elements are softened with warm wood tones and carefully curated furnishings, creating a bold yet comfortable urban sanctuary.",
+                thumbnail: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&h=900&fit=crop",
+                images: [
+                    "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1400",
+                    "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1400",
+                    "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1400"
+                ]
+            },
+            {
+                id: 3,
+                title: "Garden Pavilion",
+                year: "2024",
+                location: "Hamburg",
+                description: "A transparent structure dissolving boundaries between interior and exterior. Floor-to-ceiling glass invites nature inside while creating a contemplative retreat within the garden.",
+                thumbnail: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1200&h=750&fit=crop",
+                images: [
+                    "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1400",
+                    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1400"
+                ]
+            },
+            {
+                id: 4,
+                title: "Parkhaus",
+                year: "2023",
+                location: "Köln",
+                description: "Urban density reimagined with green terraces and communal spaces. The building acts as a vertical garden, bringing nature back into the city fabric.",
+                thumbnail: "https://images.unsplash.com/photo-1600047509358-9dc75507daeb?w=1200&h=850&fit=crop",
+                images: [
+                    "https://images.unsplash.com/photo-1600047509358-9dc75507daeb?w=1400",
+                    "https://images.unsplash.com/photo-1600585154084-4e5fe7c39198?w=1400"
+                ]
+            },
+            {
+                id: 5,
+                title: "Studio Space",
+                year: "2024",
+                location: "Frankfurt",
+                description: "Flexible workspace for creative minds. Modular walls and adaptable furniture systems allow the space to transform according to project needs.",
+                thumbnail: "https://images.unsplash.com/photo-1600585154084-4e5fe7c39198?w=1200&h=800&fit=crop",
+                images: [
+                    "https://images.unsplash.com/photo-1600585154084-4e5fe7c39198?w=1400",
+                    "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=1400"
+                ]
+            },
+            {
+                id: 6,
+                title: "Riverside",
+                year: "2024",
+                location: "Düsseldorf",
+                description: "Waterfront living with panoramic views. The design celebrates the connection to the river through expansive terraces and reflective materials.",
+                thumbnail: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1200&h=900&fit=crop",
+                images: [
+                    "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1400"
+                ]
+            }
+        ];
+
+        // ============================================
+        // CUSTOM CURSOR LOGIC
+        // ============================================
+        const cursor = document.querySelector('.cursor');
+        let mouseX = 0, mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+        });
+
+        // Add hover class on interactive elements
+        function attachCursorListeners() {
+            document.querySelectorAll('a, .project-item, button').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
+        }
+
+        // ============================================
+        // RENDER PROJECTS
+        // ============================================
+        const mainContent = document.getElementById('main-content');
+        let loadedProjects = 0;
+        const projectsPerLoad = 6;
+
+        function renderProjects() {
+            const projectsToLoad = projects.slice(loadedProjects, loadedProjects + projectsPerLoad);
+            
+            projectsToLoad.forEach((project, index) => {
+                const article = document.createElement('article');
+                article.className = 'project-item';
+                article.style.animationDelay = `${index * 0.15}s`;
+                article.innerHTML = `
+                    <img src="${project.thumbnail}" alt="${project.title}" loading="lazy">
+                    <div class="project-caption">${project.title}</div>
+                `;
+                
+                article.addEventListener('click', () => openProject(project.id));
+                mainContent.appendChild(article);
+            });
+            
+            loadedProjects += projectsToLoad.length;
+            
+            if (loadedProjects >= projects.length) {
+                document.getElementById('loading').style.display = 'none';
+            }
+            
+            attachCursorListeners();
+        }
+
+        // Initial load
+        renderProjects();
+
+        // Lazy loading on scroll
+        let isLoading = false;
+        window.addEventListener('scroll', () => {
+            if (isLoading) return;
+            
+            const scrollPosition = window.innerHeight + window.scrollY;
+            const threshold = document.body.offsetHeight - 800;
+            
+            if (scrollPosition >= threshold && loadedProjects < projects.length) {
+                isLoading = true;
+                setTimeout(() => {
+                    renderProjects();
+                    isLoading = false;
+                }, 400);
+            }
+        });
+
+        // ============================================
+        // PROJECT MODAL
+        // ============================================
+        const modal = document.getElementById('project-modal');
+        const modalContent = document.getElementById('modal-content');
+        const closeBtn = document.getElementById('close-modal');
+        const homeLink = document.getElementById('home-link');
+
+        function openProject(projectId) {
+            const project = projects.find(p => p.id === projectId);
+            if (!project) return;
+    
+            modalContent.innerHTML = `
+                <div class="project-header">
+                    <h1 class="project-title">${project.title}</h1>
+                    <div class="project-meta">${project.year} — ${project.collaborators} — ${project.location}</div>
+                    <p class="project-description">${project.description}</p>
+                 </div>
+                 <div class="project-images">
+                    ${project.images.map((img, i) => `
+                        <img src="${img}" 
+                             alt="${project.title}" 
+                             class="project-${project.id}-img-${i}" 
+                             style="animation-delay: ${i * 0.1}s">
+                    `).join('')}
+                </div>
+            `;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    modal.scrollTop = 0;
+        }
+
+        function closeProject() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        closeBtn.addEventListener('click', closeProject);
+        homeLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeProject();
+            closeInfo();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ============================================
+        // INFORMATION MODAL
+        // ============================================
+        const infoModal = document.getElementById('info-modal');
+        const infoLink = document.getElementById('info-link');
+        const closeInfoBtn = document.getElementById('close-info');
+
+        function openInfo() {
+            infoModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            infoModal.scrollTop = 0;
+        }
+
+        function closeInfo() {
+            infoModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        infoLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            openInfo();
+        });
+
+        closeInfoBtn.addEventListener('click', closeInfo);
+
+        // Close on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeProject();
+                closeInfo();
+            }
+        });
+    </script>
+    <!-- Footer -->
+    <footer>
+        <p><a href="mailto:louis.baurmann@mail.de">louis.baurmann@mail.de</a></p>
+        <p>© 2025 Louis Baurmann</p>
+    </footer>
+</body>
+</html>
+ 
