@@ -1,0 +1,13 @@
+# local-only, not part of the deployed site
+_originals/
+.claude/
+.DS_Store
+*.bak
+
+# unused: only videos/marble.mp4 is referenced by the site
+videos/Test_marble.mov
+videos/Test_marble.mp4
+
+# working docs / assets the current build doesn't use
+portfolio_briefing.md
+fonts/

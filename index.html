@@ -1,1527 +1,752 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Louis Baurmann</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@100..800&display=swap" rel="stylesheet">
-    
-    <style>
-        /* ============================================
-           CUSTOM FONT DEFINITION
-           ============================================ */
-        @font-face {
-            font-family: 'LilGrotesk';
-            src: url('fonts/LilGrotesk-Heavy.woff2') format('woff2');
-            font-weight: 900;
-            font-style: normal;
-            font-display: swap;
-        }
-        
-        /* ============================================
-           RESET & BASE STYLES
-           ============================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Roboto Mono', 'Courier New', monospace;
-            background: #e6e6e6;
-            color: #1d1d1d;
-            cursor: none;
-            overflow-x: hidden;
-        }
-
-        /* ============================================
-           CUSTOM CURSOR WITH NEON INVERT EFFECT
-           ============================================ */
-        .cursor {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 20000;
-            transform: translate(-50%, -50%);
-            background: #00FF00;
-            mix-blend-mode: difference;
-            transition: width 0.3s ease, height 0.3s ease, background 0.2s ease;
-            opacity: 0.9;
-        }
-
-        .cursor.hover {
-            width: 120px;
-            height: 120px;
-            background: #FF00FF;
-        }
-
-        @media (max-width: 768px) {
-            .cursor { display: none; }
-            body { cursor: auto; }
-        }
-
-        /* ============================================
-           HEADER / NAVIGATION
-           ============================================ */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 5rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            background: transparent;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .logo {
-            font-family: "Rubik Mono One", "monospace";
-            font-size: 2rem;
-            font-weight: 400;
-            letter-spacing: 0.02rem;
-            text-decoration: none;
-            color: #1d1d1d;
-            cursor: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .logo:hover { opacity: 0.6; }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 5rem;
-        }
-
-        .info-link,
-        .instagram-link {
-            font-family: "Rubik Mono One", "monospace";
-            font-size: 2rem;
-            font-weight: 500;
-            letter-spacing: 0.02rem;
-            text-decoration: none;
-            color: #1d1d1d;
-            cursor: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .info-link:hover,
-        .instagram-link:hover { opacity: 0.6; }
-
-        .instagram-icon {
-            width: 30px;
-            height: 30px;
-            position: relative;
-            top: 3px;
-        }
-
-        /* ============================================
-           WORK IN PROGRESS BANNER
-           ============================================ */
-        .wip-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            text-align: center;
-            padding: 2rem 5%;
-            font-size: 1.5rem;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            opacity: 0.5;
-            z-index: 1001;
-            pointer-events: none;
-            color: red;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        /* ============================================
-           MAIN CONTENT - ZWEI UNABHÄNGIGE SPALTEN
-           ============================================ */
-        main {
-            padding: 280px 5% 8rem;
-            display: flex;
-            flex-direction: row;
-            gap: 4%;
-            align-items: flex-start;
-        }
-
-        .col-left,
-        .col-right {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        /* Rechte Spalte grundsätzlich nach unten versetzt */
-        .col-right {
-            margin-top: 18vh;
-        }
-
-        /* ============================================
-           PROJECT ITEMS
-           ============================================ */
-        .project-item {
-            display: flex;
-            flex-direction: column;
-            cursor: none;
-            opacity: 0;
-            transform: translateY(60px);
-            animation: fadeInProject 1.4s ease forwards;
-            overflow: hidden;
-            border-radius: 3px;
-            margin-bottom: 6vh;
-        }
-
-        /* Horizontale Variation linke Spalte */
-        .col-left .project-item:nth-child(4n+1) { padding-right: 5%; }
-        .col-left .project-item:nth-child(4n+2) { padding-right: 18%; }
-        .col-left .project-item:nth-child(4n+3) { padding-right: 8%; }
-        .col-left .project-item:nth-child(4n+4) { padding-right: 22%; }
-
-        /* Horizontale Variation rechte Spalte */
-        .col-right .project-item:nth-child(4n+1) { padding-left: 8%; }
-        .col-right .project-item:nth-child(4n+2) { padding-left: 20%; }
-        .col-right .project-item:nth-child(4n+3) { padding-left: 5%; }
-        .col-right .project-item:nth-child(4n+4) { padding-left: 15%; }
-
-        /* Vertikale Variation innerhalb der rechten Spalte */
-        .col-right .project-item:nth-child(3n+1) { margin-top: 8vh; }
-        .col-right .project-item:nth-child(3n+2) { margin-top: 0; }
-        .col-right .project-item:nth-child(3n+3) { margin-top: 14vh; }
-
-        @keyframes fadeInProject {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .project-item img {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 0.6s cubic-bezier(0.6, 1, 0.4, 1), filter 0.4s ease;
-            object-fit: contain;
-        }
-
-        .project-item:hover img { transform: scale(1.01); }
-
-        .project-caption {
-            font-size: 0.9rem;
-            margin-top: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-            padding-left: 0.5rem;
-        }
-
-        .project-item video,
-        .project-images video {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 0.6s cubic-bezier(0.6, 1, 0.4, 1), filter 0.4s ease;
-            object-fit: cover;
-            border-radius: 3px;
-        }
-
-        .project-item:hover video { transform: scale(1.01); }
-
-        /* Reset wenn Filter aktiv */
-        main.filtering .col-right {
-            margin-top: 0 !important;
-        }
-        main.filtering .col-right .project-item {
-            margin-top: 0 !important;
-        }
-
-        .project-item.hidden {
-            display: none;
-        }
-
-        /* ============================================
-           PROJECT MODAL
-           ============================================ */
-        .project-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #ffd6f9;
-            z-index: 2000;
-            overflow-y: auto;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-
-        .project-modal.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .project-content {
-            padding: 140px 15% 8rem;
-        }
-
-        .project-header {
-            margin-bottom: 5rem;
-        }
-
-        .project-title {
-            font-family: 'Rubik Mono One', "monospace";
-            font-size: 2rem;
-            font-weight: 300;
-            margin-bottom: 2rem;
-            letter-spacing: 0.03em;
-            line-height: 1.1;
-        }
-
-        .project-meta {
-            font-size: 1rem;
-            opacity: 0.6;
-            margin-bottom: 2rem;
-            letter-spacing: 0.05em;
-        }
-
-        .project-description {
-            font-size: 1.1rem;
-            line-height: 1.9;
-            max-width: 1400px;
-            font-weight: 320;
-        }
-
-        /* ── KACHELGALERIE im Projekt-Modal ── */
-        .project-images {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1rem;
-            align-items: start;
-        }
-
-        .project-images .tile {
-            position: relative;
-            overflow: hidden;
-            border-radius: 3px;
-            cursor: none;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInImage 0.2s ease forwards;
-        }
-
-        .project-images .tile:nth-child(5n+1) { grid-column: span 2; }
-        .project-images .tile:nth-child(7n+3) { grid-column: span 2; }
-
-        .project-images .tile img {
-            width: 100%;
-            height: 100%;
-            min-height: 180px;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.5s cubic-bezier(0.6, 1, 0.4, 1);
-            border-radius: 3px;
-        }
-
-        .project-images .tile video {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 3px;
-        }
-
-        .project-images .tile:hover img { transform: scale(1.03); }
-
-        .image-caption {
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-            font-weight: 300;
-            opacity: 0.6;
-            letter-spacing: 0.05em;
-        }
-
-        @keyframes fadeInImage {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .close-project {
-            position: fixed;
-            top: 8rem;
-            right: 5%;
-            font-size: 1.2rem;
-            background: none;
-            border: none;
-            cursor: none;
-            z-index: 2001;
-            font-family: 'Roboto Mono', monospace;
-            color: #1d1d1d;
-            transition: opacity 0.3s ease;
-            font-weight: 500;
-            letter-spacing: 0.2rem;
-        }
-
-        .close-project:hover { opacity: 0.5; }
-
-        /* ============================================
-           LIGHTBOX
-           ============================================ */
-        .lightbox {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.92);
-            z-index: 9000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .lightbox.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .lightbox-img {
-            max-width: 88vw;
-            max-height: 88vh;
-            object-fit: contain;
-            border-radius: 3px;
-            display: block;
-            user-select: none;
-        }
-
-        .lightbox-close {
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-            font-size: 2.5rem;
-            background: none;
-            border: none;
-            color: #e6e6e6;
-            cursor: none;
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 300;
-            transition: opacity 0.2s ease;
-            z-index: 9001;
-        }
-
-        .lightbox-close:hover { opacity: 0.5; }
-
-        .lightbox-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 3rem;
-            background: none;
-            border: none;
-            color: #e6e6e6;
-            cursor: none;
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 300;
-            padding: 1rem 1.5rem;
-            transition: opacity 0.2s ease;
-            z-index: 9001;
-            line-height: 1;
-            user-select: none;
-        }
-
-        .lightbox-arrow:hover { opacity: 0.5; }
-        .lightbox-arrow.prev { left: 1rem; }
-        .lightbox-arrow.next { right: 1rem; }
-
-        .lightbox-caption {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.85rem;
-            color: #e6e6e6;
-            opacity: 0.6;
-            letter-spacing: 0.05em;
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 300;
-            white-space: nowrap;
-        }
-
-        .lightbox-counter {
-            position: absolute;
-            top: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.85rem;
-            color: #e6e6e6;
-            opacity: 0.5;
-            letter-spacing: 0.1em;
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 300;
-        }
-
-        /* ============================================
-           INFORMATION PAGE STYLES
-           ============================================ */
-        .info-content {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            gap: 5rem;
-        }
-
-        .info-left {
-            flex: 1;
-            max-width: 600px;
-        }
-
-        .info-name {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 4rem;
-            margin-bottom: 2rem;
-            letter-spacing: 0.02em;
-            line-height: 1.1;
-        }
-
-        .info-section {
-            margin-bottom: 4rem;
-        }
-
-        .info-section-title {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            opacity: 0.5;
-            margin-bottom: 1rem;
-        }
-
-        .info-section-content {
-            font-size: 1rem;
-            line-height: 1.8;
-            font-weight: 300;
-        }
-
-        .info-section-content ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .info-section-content li {
-            margin-bottom: 0.8rem;
-        }
-
-        .info-section-content a {
-            color: #1d1d1d;
-            text-decoration: none;
-            border-bottom: 1px solid #1d1d1d;
-            transition: opacity 0.3s ease;
-        }
-
-        .info-section-content a:hover { opacity: 0.5; }
-
-        .info-right {
-            position: sticky;
-            top: 140px;
-        }
-
-        .profile-picture {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        /* ============================================
-           LOADING INDICATOR
-           ============================================ */
-        .loading {
-            text-align: center;
-            padding: 4rem;
-            font-size: 0.85rem;
-            opacity: 0.4;
-            letter-spacing: 0.1em;
-        }
-
-        /* ============================================
-           FOOTER
-           ============================================ */
-        footer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 4rem 5%;
-            font-size: 0.9rem;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-            opacity: 0.6;
-        }
-
-        footer a {
-            color: #1d1d1d;
-            text-decoration: none;
-            border-bottom: 1px solid #1d1d1d;
-            transition: opacity 0.3s ease;
-        }
-
-        footer a:hover { opacity: 0.5; }
-        footer p { margin: 0.2rem 0; }
-
-        /* ============================================
-           FILTER SYSTEM
-           ============================================ */
-        .filter-container {
-            position: fixed;
-            top: 140px;
-            left: 5%;
-            z-index: 10001;
-            isolation: isolate;
-            transition: transform 0.2s ease, opacity 0.2s ease;
-        }
-
-        .filter-button {
-            font-family: 'Rubik Mono One', monospace;
-            font-size: 1.2rem;
-            background: #1d1d1d;
-            color: #e6e6e6;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 3px;
-            cursor: none;
-            transition: opacity 0.2s ease, transform 0.2s ease;
-            letter-spacing: 0.02rem;
-        }
-
-        .filter-button:hover {
-            opacity: 0.8;
-            transform: translateY(-2px);
-        }
-
-        .filter-button.active {
-            background: #00FF00;
-            color: #1d1d1d;
-        }
-
-        .filter-dropdown {
-            margin-top: 1rem;
-            background: #FF00FF;
-            border-radius: 3px;
-            padding: 0;
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.4s ease;
-            pointer-events: none;
-        }
-
-        .filter-dropdown.active {
-            max-height: 500px;
-            opacity: 1;
-            padding: 1.5rem;
-            pointer-events: auto;
-        }
-
-        .filter-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-        }
-
-        .filter-tag {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9rem;
-            background: transparent;
-            color: #e6e6e6;
-            border: 1px solid #e6e6e6;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            cursor: none;
-            transition: all 0.3s ease;
-            letter-spacing: 0.05em;
-        }
-
-        .filter-tag:hover {
-            background: #e6e6e6;
-            color: #1d1d1d;
-        }
-
-        .filter-tag.active {
-            background: #FF00FF;
-            border-color: #FF00FF;
-            color: #1d1d1d;
-        }
-
-        .filter-clear {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.85rem;
-            background: transparent;
-            color: #e6e6e6;
-            border: 1px solid #e6e6e6;
-            padding: 0.4rem 0.8rem;
-            border-radius: 3px;
-            cursor: none;
-            margin-top: 1rem;
-            transition: all 0.3s ease;
-            letter-spacing: 0.05em;
-        }
-
-        .filter-clear:hover {
-            background: #e6e6e6;
-            color: #1d1d1d;
-        }
-
-        .active-filters {
-            margin-top: 0.8rem;
-            font-size: 0.8rem;
-            color: #e6e6e6;
-            opacity: 0.7;
-        }
-
-        /* ============================================
-           RESPONSIVE DESIGN
-           ============================================ */
-        @media (max-width: 1024px) {
-            main {
-                padding: 120px 8% 6rem;
-                gap: 3%;
-            }
-
-            .col-right {
-                margin-top: 12vh;
-            }
-
-            .project-content {
-                padding: 120px 10% 6rem;
-            }
-
-            .project-title {
-                font-size: 3.0rem;
-            }
-
-            .info-content {
-                flex-direction: column-reverse;
-                gap: 3rem;
-            }
-
-            .info-right {
-                position: relative;
-                top: 0;
-                align-self: flex-end;
-            }
-
-            .profile-picture {
-                width: 250px;
-                height: 250px;
-            }
-
-            .info-name {
-                font-size: 3rem;
-            }
-
-            .project-images {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            }
-
-            .project-images .tile:nth-child(5n+1),
-            .project-images .tile:nth-child(7n+3) {
-                grid-column: span 1;
-            }
-        }
-
-        @media (max-width: 768px) {
-            header {
-                padding: 2rem 6%;
-            }
-
-            .wip-banner {
-                padding: 1rem 6%;
-                font-size: 1.2rem;
-            }
-
-            main {
-                padding: 100px 6% 5rem;
-                flex-direction: column;
-                gap: 4vh;
-            }
-
-            .col-left,
-            .col-right {
-                width: 100%;
-            }
-
-            .col-right {
-                margin-top: 0;
-            }
-
-            .col-left .project-item,
-            .col-right .project-item {
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                margin-top: 0 !important;
-            }
-
-            .project-content {
-                padding: 100px 6% 5rem;
-            }
-
-            .project-title {
-                font-size: 2rem;
-            }
-
-            .project-meta {
-                font-size: 0.9rem;
-            }
-
-            .project-description {
-                font-size: 1rem;
-                line-height: 1.7;
-            }
-
-            .project-images {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .project-images .tile:nth-child(5n+1),
-            .project-images .tile:nth-child(7n+3) {
-                grid-column: span 2;
-            }
-
-            .close-project {
-                right: 6%;
-                font-size: 2rem;
-            }
-
-            .profile-picture {
-                width: 200px;
-                height: 200px;
-            }
-
-            .info-name {
-                font-size: 2.5rem;
-            }
-
-            .filter-container {
-                top: 100px;
-                left: 6%;
-                right: 6%;
-            }
-
-            .filter-button {
-                font-size: 1rem;
-                padding: 0.6rem 1.2rem;
-                width: 100%;
-            }
-
-            .filter-tags { gap: 0.6rem; }
-
-            .filter-tag {
-                font-size: 0.8rem;
-                padding: 0.4rem 0.8rem;
-            }
-
-            body { cursor: auto; }
-
-            .filter-button,
-            .filter-tag,
-            .filter-clear {
-                cursor: pointer;
-            }
-
-            .lightbox-arrow {
-                font-size: 2rem;
-                padding: 0.5rem 0.8rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Louis Baurmann</title>
+<meta name="description" content="Louis Baurmann — architecture and art. Berlin / Zürich.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   BASE — pure black & white, one grotesque
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#ffffff;
+  --fg:#0b0b0b;
+  --mute:#8c8c8c;
+  --line:#e6e6e6;
+  --pad:clamp(18px,2.6vw,40px);
+  --head:54px;
+  --side:clamp(200px,20vw,300px);       /* free left column */
+  --sidegap:clamp(1.5rem,3.5vw,3.5rem); /* gap: text → first image column */
+  --fgap:clamp(12px,1.4vw,22px);        /* gap between the two image columns */
+  --sans:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--fg);
+  font-family:var(--sans);font-optical-sizing:auto;font-weight:400;
+  -webkit-font-smoothing:antialiased;letter-spacing:-.011em;
+  cursor:none;overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+img,video{display:block;max-width:100%}
+::selection{background:var(--fg);color:var(--bg)}
+
+/* ============================================================
+   CURSOR — colours invert in a radius
+   ============================================================ */
+.cursor{
+  position:fixed;top:0;left:0;width:26px;height:26px;border-radius:50%;
+  background:#fff;mix-blend-mode:difference;pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width .35s cubic-bezier(.34,1,.3,1),height .35s cubic-bezier(.34,1,.3,1),opacity .3s;
+  will-change:transform;
+}
+.cursor.big{width:158px;height:158px}
+.cursor.off{opacity:0}
+
+/* ============================================================
+   FIXED HEADER
+   ============================================================ */
+.hdr{
+  position:fixed;top:0;left:0;right:0;z-index:100;height:var(--head);
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:0 var(--pad);background:var(--bg);font-size:15px;letter-spacing:-.006em;
+}
+.hdr nav{display:flex;gap:1.6rem;align-items:baseline}
+.hdr .name{font-weight:600}
+.hdr a{color:var(--fg);transition:color .25s}
+.hdr a.sub{color:var(--mute)}
+.hdr a.sub:hover,.hdr a.sub[aria-current]{color:var(--fg)}
+.hdr .right{display:flex;flex-direction:column;align-items:flex-end;line-height:1.28}
+.hdr .right a{color:var(--mute)}
+.hdr .right a:hover{color:var(--fg)}
+
+main{padding-top:var(--head)}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+.up{
+  position:fixed;right:var(--pad);bottom:calc(var(--pad) - 2px);z-index:95;
+  background:none;border:none;font:inherit;font-size:15px;letter-spacing:-.01em;
+  color:#fff;mix-blend-mode:difference;cursor:none;
+  opacity:0;transform:translateY(8px);pointer-events:none;
+  transition:opacity .35s,transform .35s;
+}
+.up.vis{opacity:1;transform:none;pointer-events:auto}
+
+/* ============================================================
+   HOME — free text left, two image columns, gap centred on the page
+   ============================================================ */
+.spine{
+  padding:0 var(--pad);
+  display:grid;
+  grid-template-columns:
+    var(--side)
+    var(--sidegap)
+    minmax(0,calc(50% - var(--fgap)/2 - var(--side) - var(--sidegap)))
+    var(--fgap)
+    minmax(0,calc(50% - var(--fgap)/2));
+}
+.side{
+  grid-column:1;align-self:start;
+  position:sticky;top:calc(var(--head) + clamp(2rem,7vh,4.2rem));
+  font-size:clamp(15.5px,1.1vw,18px);line-height:1.5;letter-spacing:-.013em;
+}
+.side .links{margin-top:1.7rem;display:flex;flex-direction:column;gap:.1rem;color:var(--mute);font-size:15px}
+.side .links a:hover{color:var(--fg)}
+.side .links .k{margin-top:1rem}
+.side .links .k:first-child{margin-top:0}
+
+/* ---- opening screen: slideshow fills the view, "scroll down" band below ---- */
+.intro{
+  min-height:calc(100vh - var(--head));
+  min-height:calc(100svh - var(--head));
+  display:flex;flex-direction:column;
+}
+.intro-stage{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:clamp(1rem,4vh,3rem) var(--pad);
+}
+.show{
+  position:relative;overflow:hidden;background:#f1f1f1;
+  width:min(600px,50vw);aspect-ratio:3/2;
+}
+.show .slide{
+  position:absolute;inset:0;opacity:0;
+  transition:opacity 1.4s ease;
+}
+.show .slide.on{opacity:1}
+.show .slide img,.show .slide video{width:100%;height:100%;object-fit:cover;display:block}
+
+.marquee{
+  overflow:hidden;white-space:nowrap;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  cursor:none;user-select:none;
+}
+.marquee-track{display:flex;width:max-content;animation:marquee 34s linear infinite}
+.marquee-track span{flex:none;padding:.95rem 0;font-size:15px;letter-spacing:-.008em}
+.marquee-track em{font-style:normal;color:var(--mute);padding:0 1.5rem}
+.marquee:hover .marquee-track{animation-play-state:paused}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+@media(max-width:900px){
+  .show{width:100%;max-width:520px}
+  .marquee-track span{font-size:14px}
+}
+
+.home{padding-top:clamp(2.6rem,7vh,5rem);padding-bottom:clamp(4rem,10vh,7rem)}
+.feed-l{grid-column:3}
+.feed-r{grid-column:5}
+.feed-l,.feed-r{display:flex;flex-direction:column;gap:var(--fgap);min-width:0}
+.card{display:block;width:100%}
+.card .frame{display:block;position:relative;overflow:hidden;background:#f2f2f2}
+.card.tall .frame{aspect-ratio:3/4}
+.card.wide .frame{aspect-ratio:3/2}
+.card img{
+  width:100%;height:100%;object-fit:cover;opacity:0;
+  transition:transform 1.1s cubic-bezier(.2,.9,.25,1),opacity .8s ease;
+}
+.card img.in{opacity:1}
+.card:hover img{transform:scale(1.03)}
+.card .cap{
+  display:flex;flex-wrap:wrap;gap:.05rem .7rem;align-items:baseline;
+  padding-top:.55rem;font-size:15px;letter-spacing:-.012em;
+}
+.card .cap .t{font-weight:500}
+.card .cap .m{color:var(--mute)}
+
+/* ============================================================
+   INDEX — plain list
+   ============================================================ */
+.index{padding:clamp(2.4rem,8vh,5rem) var(--pad) clamp(4rem,9vh,6rem)}
+.index h1{
+  font-weight:600;font-size:clamp(1.7rem,2.6vw,2.4rem);
+  letter-spacing:-.032em;margin-bottom:clamp(1.4rem,4vh,2.4rem);
+}
+.idx-head,.idx-row{
+  display:grid;
+  grid-template-columns:2.6rem minmax(0,1fr) 8rem minmax(0,17rem);
+  gap:1rem;align-items:baseline;
+}
+.idx-head{
+  font-size:13px;color:var(--mute);letter-spacing:-.004em;
+  padding-bottom:.8em;border-bottom:1px solid var(--line);
+}
+.idx-row{
+  padding:.95em 0;border-bottom:1px solid var(--line);
+  font-size:clamp(16px,1.35vw,20px);letter-spacing:-.018em;
+  transition:padding-left .35s cubic-bezier(.3,1,.3,1);
+}
+.idx-row:hover{padding-left:.6rem}
+.idx-row .n{color:var(--mute);font-size:13px;letter-spacing:0}
+.idx-row .t{font-weight:500}
+.idx-row .y,.idx-row .l{color:var(--mute);font-size:clamp(14px,1vw,15px);letter-spacing:-.008em}
+
+/* ============================================================
+   PROJECT — full-width header, images edge-anchored at varied sizes
+   ============================================================ */
+.p-head{
+  padding:clamp(2.6rem,8vh,5rem) var(--pad) clamp(2.6rem,7vh,4.6rem);
+  display:grid;grid-template-columns:1fr 1fr 1.7fr;
+  gap:clamp(1.6rem,4vw,4.2rem);align-items:start;
+}
+.p-head h1{
+  font-weight:600;font-size:clamp(2rem,3.4vw,3.1rem);
+  line-height:1.01;letter-spacing:-.036em;margin-bottom:.55rem;
+}
+.p-head .sub{font-size:16px;line-height:1.4;letter-spacing:-.014em}
+.p-head .sub .y{color:var(--mute);display:block;margin-top:.3em}
+.p-head .facts dt{font-weight:500;font-size:16px;margin-top:1.1rem}
+.p-head .facts dt:first-child{margin-top:0}
+.p-head .facts dd{font-size:16px;color:var(--mute);line-height:1.4}
+.p-head .body{font-size:clamp(1.08rem,1.25vw,1.32rem);line-height:1.44;letter-spacing:-.014em;max-width:64ch}
+
+.p-media{padding:0}
+.p-media figure{margin:0;width:100%;position:relative;background:#f2f2f2}
+.p-media figure + figure{margin-top:clamp(2.4rem,6vh,5rem)}
+.p-media figure:nth-child(4n+2){width:70%}
+.p-media figure:nth-child(4n+3){width:58%;margin-left:auto}
+.p-media figure:nth-child(4n+4){width:83%}
+.p-media figure.bleed{width:100%;margin-left:0;margin-right:0}
+.p-media img,.p-media video{width:100%;height:auto;opacity:0;transition:opacity .8s ease}
+.p-media img.in,.p-media video.in{opacity:1}
+.p-media img[data-view]{cursor:none}
+.p-media figcaption{margin-top:.6rem;margin-left:2px;font-size:14px;color:var(--mute);letter-spacing:-.01em}
+
+/* ---- image viewer ---- */
+.lb{
+  position:fixed;inset:0;z-index:200;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.lb.open{opacity:1;pointer-events:auto}
+.lb-fig{margin:0;display:flex;flex-direction:column;gap:.75rem;max-width:74vw}
+.lb-fig img{max-width:100%;max-height:76vh;width:auto;object-fit:contain;margin:0 auto}
+.lb-fig figcaption{text-align:center;font-size:14px;color:var(--mute);letter-spacing:-.01em;min-height:1em}
+.lb button{background:none;border:none;font:inherit;color:var(--fg);cursor:none;position:absolute}
+.lb .lb-close{top:1.5rem;right:var(--pad);font-size:15px;letter-spacing:-.006em}
+.lb .lb-prev,.lb .lb-next{top:50%;transform:translateY(-50%);font-size:20px;padding:1.1rem}
+.lb .lb-prev{left:calc(var(--pad) - .6rem)}
+.lb .lb-next{right:calc(var(--pad) - .6rem)}
+.lb .lb-close:hover,.lb .lb-prev:hover,.lb .lb-next:hover{color:var(--mute)}
+.lb-count{position:absolute;bottom:1.6rem;left:50%;transform:translateX(-50%);font-size:14px;color:var(--mute)}
+@media(max-width:640px){
+  .lb-fig{max-width:90vw}
+  .lb .lb-prev{left:0}.lb .lb-next{right:0}
+}
+
+.p-foot{
+  display:flex;justify-content:space-between;gap:1rem;
+  padding:clamp(3rem,8vh,5.5rem) var(--pad) clamp(4rem,9vh,6rem);
+  font-size:15px;letter-spacing:-.012em;
+}
+.p-foot .idx{color:var(--mute)}
+.p-foot a{transition:color .25s}
+.p-foot a.off{color:var(--line);pointer-events:none}
+
+/* ============================================================
+   INFO — the long text lives here
+   ============================================================ */
+.info{
+  padding:clamp(2.6rem,8vh,5rem) var(--pad) clamp(4rem,9vh,6rem);
+  display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:clamp(1.6rem,4vw,4.2rem);align-items:start;
+}
+.info .bio{font-size:clamp(1.3rem,1.9vw,1.85rem);line-height:1.3;letter-spacing:-.024em}
+.info .bio p + p{margin-top:1em}
+.info .links{margin-top:2rem;display:flex;gap:2.6rem;font-size:15px}
+.info .links div{display:flex;flex-direction:column;gap:.15rem}
+.info .links b{font-weight:500;color:var(--mute)}
+.info .links a:hover{opacity:.5}
+.info .cv section{margin-bottom:1.5rem}
+.info .cv h2{font-weight:500;font-size:15px;margin-bottom:.2rem}
+.info .cv li{list-style:none;font-size:15px;color:var(--mute);line-height:1.44}
+.info .portrait{width:100%;aspect-ratio:3/4;object-fit:cover;background:#f2f2f2;opacity:0;transition:opacity .8s}
+.info .portrait.in{opacity:1}
+
+/* ---- photography: quiet, one per screen, never cropped ---- */
+.photos{padding:clamp(2.4rem,7vh,4.5rem) var(--pad) clamp(4rem,10vh,7rem);border-top:1px solid var(--line)}
+.photos h2{
+  font-weight:500;font-size:15px;color:var(--mute);
+  margin-bottom:clamp(1.8rem,5vh,3.2rem);
+  display:flex;align-items:center;gap:.15em;
+}
+.photos h2 .arr{
+  font-size:1.15em;color:var(--fg);line-height:1;
+  animation:nudge 2.1s ease-in-out infinite;
+}
+@keyframes nudge{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
+.photo-list{display:flex;flex-direction:column;align-items:center;gap:clamp(3rem,10vh,7rem)}
+.photo-list figure{margin:0;display:flex;justify-content:center;width:100%}
+.photo-list img{
+  max-width:100%;max-height:82vh;width:auto;height:auto;object-fit:contain;
+  cursor:none;opacity:0;transition:opacity .9s ease;
+}
+.photo-list img.in{opacity:1}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{
+  border-top:1px solid var(--line);margin-top:clamp(3rem,7vh,5rem);
+  padding:clamp(1.4rem,3vh,2.2rem) var(--pad) clamp(2rem,4vh,3rem);
+  display:flex;flex-wrap:wrap;gap:.5rem 2rem;justify-content:space-between;
+  font-size:14px;color:var(--mute);
+}
+footer a:hover{color:var(--fg)}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:1000px){
+  .spine{display:flex;flex-direction:column;gap:2rem}
+  .side{position:static;max-width:60ch;order:-1}
+  .feed-l,.feed-r{display:contents}
+  .card{margin-bottom:1.6rem}
+  .card .frame{aspect-ratio:auto}
+  .card.tall .frame,.card.wide .frame{aspect-ratio:4/3}
+  .p-head{grid-template-columns:1fr;gap:1.5rem}
+  .p-media figure,
+  .p-media figure:nth-child(4n+2),
+  .p-media figure:nth-child(4n+3),
+  .p-media figure:nth-child(4n+4){width:100%;margin-left:0}
+  .info{grid-template-columns:1fr;gap:2rem}
+  .info .portrait{max-width:420px}
+}
+@media(max-width:640px){
+  body{cursor:auto}
+  .cursor{display:none}
+  a,button{cursor:pointer}
+  .hdr{font-size:13px}
+  .hdr nav{gap:1.1rem}
+  .idx-head{display:none}
+  .idx-row{grid-template-columns:1fr auto;row-gap:.15rem}
+  .idx-row .n{display:none}
+  .idx-row .l{grid-column:1/-1}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition-duration:.01s!important}
+  .card img,.p-media img,.p-media video,.info .portrait,.photo-list img{opacity:1}
+  .marquee-track,.photos h2 .arr{animation:none}
+}
+</style>
 </head>
 <body>
-    <div class="cursor"></div>
 
-    <header>
-        <a href="#" class="logo" id="home-link">LOUIS BAURMANN</a>
-        <div class="header-right">
-            <a href="#" class="info-link" id="info-link">information</a>
-            <a href="https://instagram.com/louis.eb" target="_blank" class="instagram-link">
-                <svg class="instagram-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-            </a>
+<div class="cursor" id="cursor"></div>
+
+<header class="hdr">
+  <nav>
+    <a class="name" href="#/">Louis Baurmann</a>
+    <a class="sub" href="#/" data-nav="#/">Work</a>
+    <a class="sub" href="#/index" data-nav="#/index">Index</a>
+    <a class="sub" href="#/info" data-nav="#/info">Info</a>
+  </nav>
+  <span class="right">
+    <a href="mailto:louis.baurmann@mail.de">Email</a>
+    <a href="https://instagram.com/louis.eb" target="_blank" rel="noopener">Instagram</a>
+  </span>
+</header>
+
+<main id="view"></main>
+
+<button class="up" id="up">Top ↑</button>
+
+<div class="lb" id="lb" aria-hidden="true">
+  <button class="lb-close" id="lbClose">Close</button>
+  <button class="lb-prev" id="lbPrev" aria-label="Previous">←</button>
+  <figure class="lb-fig">
+    <img id="lbImg" src="" alt="">
+    <figcaption id="lbCap"></figcaption>
+  </figure>
+  <button class="lb-next" id="lbNext" aria-label="Next">→</button>
+  <span class="lb-count" id="lbCount"></span>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const seq = (p,n) => Array.from({length:n},(_,i)=>({img:`images/${p}-${String(i+1).padStart(2,'0')}.jpg`}));
+
+/* col: "l" (narrow left column) or "r" (wide right column).
+   format: "tall" (3:4) or "wide" (3:2) — matched to each cover.
+   bleed:true on a media item makes that one full-bleed on the project page. */
+const projects = [
+  { n:"01", title:"Winterquartier", year:"2024–25", kind:"Built", loc:"Berlin, DE",
+    team:"Louis Baurmann, Theo Giersberg", col:"l", format:"tall",
+    sub:"Self-built greenhouse and orangerie hybrid.",
+    text:"An autoconstruction of a greenhouse–orangerie hybrid, built almost entirely from recycled and salvaged material. The project was as much a construction experiment as a building: joints, claddings and details were tested at full scale on site, and the result carries the traces of that process.",
+    cover:"images/p1-01.jpg", media:seq("p1",9) },
+
+  { n:"02", title:"Rainforest Gallery", year:"2023", kind:"Architecture", loc:"Benin City, NG",
+    team:"Nzinga Mboup, Louis Baurmann", col:"r", format:"wide",
+    sub:"Gallery for the MOWAA Campus.",
+    text:"Part of the Museum of West African Art campus in Benin City. The design references local building traditions and the walls of the royal palace that stood on this site until 1897. By foregrounding material and technique, a space emerges that is enclosed and open at the same time.",
+    cover:"images/p2-01.jpg",
+    media:[
+      {img:"images/p2-01.jpg",cap:"Render, with Studio Contra",bleed:true},
+      {img:"images/p2-02.jpg",cap:"Render, with Studio Contra"},
+      {img:"images/p2-03.jpg",cap:"Render, with Studio Contra"},
+      {img:"images/p2-04.jpg"},
+      {img:"images/p2-05.jpg"}
+    ] },
+
+  { n:"03", title:"Feuerwehr Rot", year:"2025", kind:"Object", loc:"UdK Berlin",
+    team:"Louis Baurmann", col:"l", format:"tall",
+    sub:"3D-printed construction kit from traditional joinery.",
+    text:"Traditional timber joints serve as the basis for a 3D-printed construction kit. Each element locks into the next without glue or fasteners, and the pieces accumulate into a sculpture that wedges itself together — held only by its own geometry.",
+    cover:"images/p3-cover.jpg", media:seq("p3",5) },
+
+  { n:"04", title:"Living Plus", year:"2024", kind:"Architecture", loc:"UdK Berlin",
+    team:"Louis Baurmann", col:"r", format:"wide",
+    sub:"Bachelor thesis on shared and individual space.",
+    text:"A residential study working along the line between shared and individual space. The thesis asks how much can be given away to the collective before the private dwelling stops being one, and tests the answer across plan, section and construction.",
+    cover:"images/p4-01.jpg", media:seq("p4",15) },
+
+  { n:"05", title:"reCycle", year:"2024–25", kind:"Art", loc:"UdK Berlin",
+    team:"Louis Baurmann", col:"r", format:"wide",
+    sub:"Wege in die Zukunft. AI video animation.",
+    text:"Disused coal-mining infrastructure is re-read as a network of routes for bicycles. The project was developed as an experimental AI video animation, letting the machine hallucinate the transformation of an industrial landscape into a slow, human-scaled one.",
+    cover:"images/p5-01.jpg", media:seq("p5",4) },
+
+  { n:"06", title:"Rhythm of Wind", year:"2025", kind:"Installation", loc:"Copenhagen, DK",
+    team:"Workshop Paraply", col:"l", format:"tall",
+    sub:"Hands-on workshop installation.",
+    text:"Wind as the rhythm of the city, translated into water. Built during a hands-on workshop in Copenhagen, the piece registers the movement of air as a visible, changing pattern on a water surface.",
+    cover:"images/p6-01.jpg", media:seq("p6",10) },
+
+  { n:"07", title:"Marble", year:"2022", kind:"Art", loc:"UdK Berlin",
+    team:"Louis Baurmann, Victor Stasik", col:"r", format:"wide",
+    sub:"Material study — casting, weight, surface.",
+    text:"A material study concerned with casting, weight and surface: what a heavy material looks like when it is made to behave lightly, and what remains of the original once it has been reproduced.",
+    cover:"images/p7-01.jpg",
+    media:[{img:"images/p7-01.jpg",bleed:true},{video:"videos/marble.mp4"}] },
+
+  { n:"08", title:"Torre Rinaldi", year:"2023", kind:"Competition", loc:"Rinaldi, IT",
+    team:"Louis Baurmann, Victor Stasik", col:"l", format:"tall",
+    sub:"Modern ruin, left as found.",
+    text:"Rather than altering the tower, the proposal leaves it as a modern ruin and makes that the attraction. Everything the programme actually needs is built anew beside it, so the old structure is relieved of the duty to perform.",
+    cover:"images/p8-01.jpg", media:seq("p8",7) }
+];
+
+/* photographs — shown under Info and, together with the project videos,
+   in the opening slideshow on the home screen */
+const photos = [
+  "photography/01.jpg",
+  "photography/02.jpg",
+  "photography/03.jpg"
+];
+const projectVideos = projects.flatMap(p => p.media.filter(m=>m.video).map(m=>m.video));
+const showMedia = [
+  {img:photos[0]}, {video:projectVideos[0]}, {img:photos[1]}, {img:photos[2]}
+].filter(m => m.img || m.video);
+
+const shortBio = "Louis Baurmann is an architect focused on sustainable design and the relationship between architecture and society, with a particular interest in West Africa. Alongside, he works in spatial design, autoconstruction and editorial.";
+
+const bio = "Louis Baurmann studied architecture at the Berlin University of the Arts. He focused on sustainable design practices and the intersection of architecture and society, with a particular interest in West-Africa, where he gained his first work experience. Next to his studies he ventured into other fields like spatial design and autoconstruction and worked as an editor and contributor of the student magazine Protocol. He will continue his studies at the École Polytechnique Fédérale de Lausanne in September.";
+
+const cvCols = [
+  {h:"Education",items:[
+    "École Polytechnique Fédérale de Lausanne — from 2026",
+    "MA Architecture, University of the Arts Berlin (2024–26)",
+    "BA Architecture, University of the Arts Berlin (2019–24)"]},
+  {h:"Experience",items:[
+    "Studio Esch Rickenbacher Architekten (SERA), Zürich — Internship (2026)",
+    "Worofila SAS, Dakar — Internship (2023)",
+    "Protocol Magazine — editor and contributor"]},
+  {h:"Awards",items:["Promos DAAD Scholarship (2023)"]},
+  {h:"Publications",items:[
+    "“In architecture you learn from what is” — interview, Protocol Magazine (2025)",
+    "Protocol Magazine no. 15 — release (2025)"]}
+];
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const view = document.getElementById('view');
+const esc = s => (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const T = String(projects.length).padStart(2,'0');
+
+const footer = () => `
+  <footer>
+    <span>Louis Baurmann — Architecture &amp; Art</span>
+    <span><a href="mailto:louis.baurmann@mail.de">louis.baurmann@mail.de</a> &nbsp;·&nbsp;
+      <a href="https://instagram.com/louis.eb" target="_blank" rel="noopener">Instagram</a></span>
+    <span>© 2026</span>
+  </footer>`;
+
+const card = (p,i) => `
+  <a class="card ${p.format}" href="#/p/${p.n}" style="order:${i}">
+    <span class="frame"><img src="${p.cover}" alt="${esc(p.title)}" loading="lazy"></span>
+    <span class="cap">
+      <span class="t">${esc(p.title)}</span>
+      <span class="m">${esc(p.kind)} — ${esc(p.year)}</span>
+    </span>
+  </a>`;
+
+function renderHome(){
+  const beat = Array.from({length:26},()=>'scroll down<em>·</em>').join('');
+  view.innerHTML = `
+    <section class="intro">
+      <div class="intro-stage">
+        <div class="show">
+          ${showMedia.map(m=>`<div class="slide">${
+            m.video
+              ? `<video src="${m.video}" muted loop playsinline preload="metadata"></video>`
+              : `<img src="${m.img}" alt="" loading="eager">`
+          }</div>`).join('')}
         </div>
-    </header>
+      </div>
+      <div class="marquee" id="marquee">
+        <div class="marquee-track"><span>${beat}</span><span>${beat}</span></div>
+      </div>
+    </section>
 
-    <div class="filter-container">
-        <button class="filter-button" id="filter-toggle">Filter</button>
-        <div class="filter-dropdown" id="filter-dropdown">
-            <div class="filter-tags" id="filter-tags"></div>
-            <div class="active-filters" id="active-filters"></div>
-            <button class="filter-clear" id="filter-clear">Clear All</button>
+    <section class="spine home">
+      <aside class="side">
+        <p>${esc(shortBio)}</p>
+        <div class="links">
+          <span class="k">Contact</span>
+          <a href="mailto:louis.baurmann@mail.de">Email</a>
+          <span class="k">Follow</span>
+          <a href="https://instagram.com/louis.eb" target="_blank" rel="noopener">Instagram</a>
         </div>
-    </div>
+      </aside>
+      <div class="feed-l">${projects.map((p,i)=>p.col==='l'?card(p,i):'').join('')}</div>
+      <div class="feed-r">${projects.map((p,i)=>p.col==='r'?card(p,i):'').join('')}</div>
+    </section>
+    ${footer()}`;
+  startShow();
+  after();
+}
 
-    <div class="wip-banner">
-        Work in progress — more coming soon
-    </div>
+function renderIndex(){
+  view.innerHTML = `
+    <section class="index">
+      <h1>Index</h1>
+      <div class="idx-list">
+        <div class="idx-head"><span>No.</span><span>Project</span><span>Year</span><span>Location</span></div>
+        ${projects.map(p=>`
+          <a class="idx-row" href="#/p/${p.n}">
+            <span class="n">${p.n}</span>
+            <span class="t">${esc(p.title)}</span>
+            <span class="y">${esc(p.year)}</span>
+            <span class="l">${esc(p.loc)}</span>
+          </a>`).join('')}
+      </div>
+    </section>
+    ${footer()}`;
+  after();
+}
 
-    <main id="main-content">
-        <div class="col-left" id="col-left"></div>
-        <div class="col-right" id="col-right"></div>
-    </main>
+function renderProject(n){
+  const i = projects.findIndex(p=>p.n===n);
+  if(i<0){ location.hash='#/'; return; }
+  const p = projects[i], prev = projects[i-1], next = projects[i+1];
 
-    <div class="loading" id="loading">scroll for more</div>
+  view.innerHTML = `
+    <section class="p-head">
+      <div>
+        <h1>${esc(p.title)}</h1>
+        <p class="sub">${esc(p.sub)}<span class="y">${esc(p.year)}</span></p>
+      </div>
+      <dl class="facts">
+        <dt>Location</dt><dd>${esc(p.loc)}</dd>
+        <dt>With</dt><dd>${esc(p.team)}</dd>
+        <dt>Type</dt><dd>${esc(p.kind)}</dd>
+      </dl>
+      <p class="body">${esc(p.text)}</p>
+    </section>
 
-    <div class="project-modal" id="project-modal">
-        <button class="close-project" id="close-modal">[close]</button>
-        <div class="project-content" id="modal-content"></div>
-    </div>
+    <section class="p-media">
+      ${p.media.map((m,j)=>{
+        const el = m.video
+          ? `<video src="${m.video}" autoplay muted loop playsinline></video>`
+          : `<img src="${m.img}" alt="${esc(p.title)} ${j+1}" loading="${j<2?'eager':'lazy'}" data-view>`;
+        return `<figure class="${m.bleed?'bleed':''}">${el}${m.cap?`<figcaption>${esc(m.cap)}</figcaption>`:''}</figure>`;
+      }).join('')}
+    </section>
 
-    <!-- LIGHTBOX -->
-    <div class="lightbox" id="lightbox">
-        <button class="lightbox-close" id="lightbox-close">×</button>
-        <button class="lightbox-arrow prev" id="lightbox-prev">←</button>
-        <img class="lightbox-img" id="lightbox-img" src="" alt="">
-        <button class="lightbox-arrow next" id="lightbox-next">→</button>
-        <div class="lightbox-caption" id="lightbox-caption"></div>
-        <div class="lightbox-counter" id="lightbox-counter"></div>
-    </div>
+    <nav class="p-foot">
+      <a class="${prev?'':'off'}" href="${prev?'#/p/'+prev.n:'#/'}">${prev?'← '+esc(prev.title):'←'}</a>
+      <span class="idx">${p.n} / ${T}</span>
+      <a class="${next?'':'off'}" href="${next?'#/p/'+next.n:'#/'}">${next?esc(next.title)+' →':'→'}</a>
+    </nav>
+    ${footer()}`;
 
-    <div class="project-modal" id="info-modal">
-        <button class="close-project" id="close-info">[close]</button>
-        <div class="project-content">
-            <div class="info-content">
-                <div class="info-left">
-                    <h1 class="info-name">Louis Baurmann</h1>
+  const shots = p.media.filter(m=>m.img).map((m,k)=>({src:m.img,cap:m.cap||`${p.title} — ${String(k+1).padStart(2,'0')}`}));
+  view.querySelectorAll('.p-media img[data-view]').forEach((el,k)=>{
+    el.addEventListener('click',()=>openLb(shots,k));
+  });
+  after();
+}
 
-                    <div class="info-section">
-                        <div class="info-section-title">About</div>
-                        <div class="info-section-content">
-                            <p>Architect based in Berlin and Zurich, focused on creating spaces that bridge functionality and artistic expression. Interested in materials and people.</p>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <div class="info-section-title">Education</div>
-                        <div class="info-section-content">
-                            <ul>
-                                <li>2024–2026 · Master studies Architecture · University of the Arts Berlin</li>
-                                <li>2019–2024 · Bachelor of Arts Architecture · University of the Arts Berlin</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <div class="info-section-title">Awards</div>
-                        <div class="info-section-content">
-                            <ul>
-                                <li>2023 · Promos DAAD scholarship</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <div class="info-section-title">Work</div>
-                        <div class="info-section-content">
-                            <ul>
-                                <li>02/2026 - 07/2026 · internship Studio Esch Rickenbacher Architekten (SERA), Zürich, Schweiz</li>
-                                <li>2025 · Release Protocol Magazin no. 15</li>
-                                <li>2023 · internship at Worofila SAS, Dakar, Senegal</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <div class="info-section-title">Publications</div>
-                        <div class="info-section-content">
-                            <ul>
-                                <li>2025 · "In architecture you learn from what is" · Interview in Protocol Magazine</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <div class="info-section-title">Contact</div>
-                        <div class="info-section-content">
-                            <p>For inquiries and collaborations:<br>
-                            <a href="mailto:louis.baurmann@mail.de">louis.baurmann@mail.de</a></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-right">
-                    <img src="images/profilbild.JPEG" alt="Louis Baurmann" class="profile-picture">
-                </div>
-            </div>
+function renderInfo(){
+  view.innerHTML = `
+    <section class="info">
+      <div>
+        <div class="bio"><p>${esc(bio)}</p></div>
+        <div class="links">
+          <div><b>Contact</b><a href="mailto:louis.baurmann@mail.de">Email</a></div>
+          <div><b>Follow</b><a href="https://instagram.com/louis.eb" target="_blank" rel="noopener">Instagram</a></div>
         </div>
-    </div>
+      </div>
+      <div class="cv">
+        ${cvCols.map(c=>`<section><h2>${esc(c.h)}</h2><ul>${c.items.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></section>`).join('')}
+      </div>
+      <img class="portrait" src="images/profile.jpg" alt="Louis Baurmann" loading="lazy">
+    </section>
 
-    <script>
-        const projects = [
-            {
-                id: 1,
-                title: "01 Winterquartier",
-                year: "2024-2025",
-                collaborators: "Louis Baurmann, Theo Giersberg",
-                location: "Berlin, Deutschland",
-                description: "Autoconstruction of a greenhouse - orangerie hybrid, using recycled materials and testing construction teqchniques.",
-                thumbnail: "images/project 1/1.jpg",
-                tags: ["built"],
-                images: [
-                    "images/project 1/1.jpg",
-                    "images/project 1/2.jpg",
-                    "images/project 1/3.jpg",
-                    "images/project 1/4.jpg",
-                    "images/project 1/5.jpg",
-                    "images/project 1/6.png",
-                    "images/project 1/7.jpg",
-                    "images/project 1/9.jpg",
-                    "images/project 1/10.jpg"
-                ]
-            },
-            {
-                id: 2,
-                title: "02 Rainforest Gallery",
-                year: "2023",
-                collaborators: "Nzinga Mboup, Louis Baurmann",
-                location: "Benin City, Nigeria",
-                description: "Die Rainforest Gallery is Teil des Museum of West African Art (MOWAA) Campus in Benin City. Der Entwurf referenziert die lokalen Bautraditionen und verweist auf die Mauern des königlichen Palastes, der bis zu seiner Zerstörung 1897 durch britische Truppen and dieser Stelle stand. Durch das Hervorheben des Materials und Techniken entsteht ein in sich geschlossener und zugleich offener Raum.",
-                thumbnail: "images/project 2/3.png",
-                tags: ["test"],
-                images: [
-                    { src: "images/project 2/1.png", caption: "render together with Studio Contra", type: "image" },
-                    { src: "images/project 2/2.png", caption: "render together with Studio Contra", type: "image" },
-                    { src: "images/project 2/5.png", caption: "render together with Studio Contra", type: "image" },
-                    { src: "images/project 2/4.png" },
-                    { src: "images/project 2/3.png" }
-                ]
-            },
-            {
-                id: 3,
-                title: "03 Feuerwehr Rot",
-                year: "2025",
-                collaborators: "Louis Baurmann",
-                location: "Berlin, Universität der Künste",
-                description: "Traditionelle Holzverbindungen dienen als Grundlage für einen 3D gedruckten Baukasten. Eine in sich verkeilte Skulptur entsteht.",
-                thumbnail: "images/project 3/project3.6.png",
-                tags: ["3D Print", "Experimental"],
-                images: [
-                    "images/project 3/project 3.1.jpg",
-                    "images/project 3/project3.2.jpg",
-                    "images/project 3/project3.3.jpg",
-                    "images/project 3/project3.4.jpg",
-                    "images/project 3/project3.5.jpg"
-                ]
-            },
-            {
-                id: 4,
-                title: "04 Living Plus",
-                year: "2024",
-                location: "Berlin, Univeristät der Künste",
-                description: "Bachelorarbeit",
-                thumbnail: "images/project 4/1.jpg",
-                tags: ["Residential"],
-                images: [
-                    "images/project 4/1.jpg",
-                    "images/project 4/2.jpg",
-                    "images/project 4/3.jpg",
-                    "images/project 4/4.jpg",
-                    "images/project 4/5.jpg",
-                    "images/project 4/6.png",
-                    "images/project 4/7.jpg",
-                    "images/project 4/8.jpg",
-                    "images/project 4/9.jpg",
-                    "images/project 4/10.jpg",
-                    "images/project 4/11.jpg",
-                    "images/project 4/12.jpg",
-                    "images/project 4/13.jpg",
-                    "images/project 4/14.jpg",
-                    "images/project 4/15.jpg",
+    <section class="photos">
+      <h2>Photography <span class="arr">↓</span></h2>
+      <div class="photo-list">
+        ${photos.map((src,k)=>`<figure><img src="${src}" alt="Photograph ${k+1}" loading="lazy" data-view></figure>`).join('')}
+      </div>
+    </section>
+    ${footer()}`;
 
-                ]
-            },
-            {
-                id: 5,
-                title: "05 reCycle - Wege in die Zukunft",
-                year: "2024/2025",
-                location: "Berlin, Univeristät der Künste",
-                description: "Alte Kohleförderinfrastruktur wird zu neuen Wegen für Fahrräder. Experimentelle KI-Video Animation",
-                thumbnail: "images/project 5/1.png",
-                tags: ["AI", "Experimental"],
-                images: [
-                    "images/project 5/1.png",
-                    "images/project 5/2.jpg",
-                    "images/project 5/3.png",
-                    "images/project 5/4.jpg",
-                ]
-            },
-            {
-                id: 6,
-                title: "06 Rythm of wind",
-                year: "2025",
-                location: "Kopenhagen, Dänermark",
-                description: "Hands-On Workshop Paraply. Wind als Rythmus der Stadt, übersetzt ins Wasser",
-                thumbnail: "images/project 6/2.jpg",
-                tags: ["Experimental"],
-                images: [
-                    "images/project 6/1.jpg",
-                    "images/project 6/2.jpg",
-                    "images/project 6/3.jpg",
-                    "images/project 6/4.jpg",
-                    "images/project 6/5.jpg",
-                    "images/project 6/6.jpg",
-                    "images/project 6/7.jpg",
-                    "images/project 6/8.jpg",
-                    "images/project 6/9.jpg",
-                    "images/project 6/10.jpg"
-                ]
-            },
-            {
-                id: 7,
-                title: "07 Marble",
-                year: "2022",
-                collaborators: "Louis Baurmann, Victor Stasik",
-                location: "Berlin, Universität der Künste",
-                description: "...",
-                thumbnail: "images/project 7/project7.1.png",
-                thumbnailType: "video",
-                tags: ["Experimental"],
-               images: [
-                    { src: "images/project 7/project7.1.png", type: "image" },
-                    { src: "videos/test_marble.mp4", type: "video" }
-                ]
-            },
-            {
-                id: 8,
-                title: "08 Torre Rinalde",
-                year: "2023",
-                collaborators: "Louis Baurmann, Victor Stasik",
-                location: "Rinalde, Italy",
-                description: "Modern ruin, instead of changing tower we make it a tourist attraction and instead renovate next to it",
-                thumbnail: "images/project 8/1.png",
-                tags: ["competition"],
-                images: [
-                    "images/project 8/1.png",
-                    "images/project 8/1.jpg",
-                    "images/project 8/2.png",
-                    "images/project 8/3.jpg",
-                    "images/project 8/5.jpg",
-                    "images/project 8/6.jpg",
-                    "images/project 8/7.jpg",
-                ]
-            }
-        ];
+  const shots = photos.map((src,k)=>({src,cap:`Photograph ${String(k+1).padStart(2,'0')}`}));
+  view.querySelectorAll('.photo-list img[data-view]').forEach((el,k)=>{
+    el.addEventListener('click',()=>openLb(shots,k));
+  });
+  after();
+}
 
-        const cursor = document.querySelector('.cursor');
-        let mouseX = 0, mouseY = 0;
+function route(){
+  stopShow();
+  const parts = location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);
+  if(parts[0]==='p' && parts[1]) renderProject(parts[1]);
+  else if(parts[0]==='index') renderIndex();
+  else if(parts[0]==='info') renderInfo();
+  else renderHome();
+  const here = location.hash || '#/';
+  document.querySelectorAll('.hdr a[data-nav]').forEach(a=>{
+    a.toggleAttribute('aria-current', a.dataset.nav === here || (a.dataset.nav === '#/' && here.startsWith('#/p/')));
+  });
+  window.scrollTo(0,0);
+  document.getElementById('up').classList.remove('vis');
+  cursor.classList.remove('big');
+  closeLb();
+}
+addEventListener('hashchange',route);
 
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            cursor.style.left = mouseX + 'px';
-            cursor.style.top = mouseY + 'px';
-        });
+/* ---- opening slideshow ---- */
+let showTimer = 0;
+function stopShow(){ clearInterval(showTimer); showTimer = 0; }
+function startShow(){
+  stopShow();
+  const slides = [...view.querySelectorAll('.show .slide')];
+  if(slides.length < 2){ slides[0]?.classList.add('on'); return; }
+  let i = 0;
+  const lead = s => {
+    const v = s.querySelector('video');
+    if(v){ v.currentTime = 0; v.play().catch(()=>{}); }
+  };
+  slides[0].classList.add('on'); lead(slides[0]);
+  showTimer = setInterval(()=>{
+    slides[i].classList.remove('on');
+    i = (i + 1) % slides.length;
+    slides[i].classList.add('on');
+    lead(slides[i]);
+  }, 5400);
+}
 
-        function attachCursorListeners() {
-            document.querySelectorAll('a, .project-item, .tile, .lightbox-arrow, .lightbox-close').forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-            });
-            document.querySelectorAll('.close-project').forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-            });
-        }
+/* ---- fade media in, wire the cursor ---- */
+let io;
+function after(){
+  io?.disconnect();
+  const media = [...view.querySelectorAll('.card img,.p-media img,.p-media video,.portrait,.photo-list img')];
+  const near = el => el.getBoundingClientRect().top < innerHeight*1.4;
+  const show = el => el.classList.add('in');
+  io = new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){ show(e.target); io.unobserve(e.target); }
+  }),{rootMargin:'200px 0px'});
+  media.forEach(el=>{ near(el) ? show(el) : io.observe(el); });
+  setTimeout(()=>media.forEach(el=>{ if(near(el)) show(el); }),300);
 
-        const mainContent = document.getElementById('main-content');
-        const colLeft = document.getElementById('col-left');
-        const colRight = document.getElementById('col-right');
-        let loadedProjects = 0;
-        const projectsPerLoad = 6;
-        let activeFilters = [];
-        let allProjectElements = [];
+  const marquee = view.querySelector('.marquee');
+  if(marquee) marquee.addEventListener('click',()=>{
+    view.querySelector('.spine.home')?.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+}
 
-        function getAllTags() {
-            const tagSet = new Set();
-            projects.forEach(project => {
-                if (project.tags) {
-                    project.tags.forEach(tag => tagSet.add(tag));
-                }
-            });
-            return Array.from(tagSet).sort();
-        }
+/* elements the cursor grows over — checked live so it can never get stuck */
+const HIT = 'a,button,.marquee,.p-media img[data-view],.photo-list img[data-view]';
 
-        function generateFilterTags() {
-            const filterTagsContainer = document.getElementById('filter-tags');
-            const allTags = getAllTags();
+/* ============================================================
+   IMAGE VIEWER
+   ============================================================ */
+const lb = document.getElementById('lb');
+const lbImg = document.getElementById('lbImg');
+const lbCap = document.getElementById('lbCap');
+const lbCount = document.getElementById('lbCount');
+let lbSet = [], lbI = 0;
 
-            filterTagsContainer.innerHTML = allTags.map(tag =>
-                `<button class="filter-tag" data-tag="${tag}">${tag}</button>`
-            ).join('');
+function openLb(set,i){
+  lbSet = set; lbI = i; drawLb();
+  lb.classList.add('open'); lb.setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb(){
+  lb.classList.remove('open'); lb.setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
+}
+function drawLb(){
+  const it = lbSet[lbI];
+  lbImg.src = it.src; lbImg.alt = it.cap || '';
+  lbCap.textContent = it.cap || '';
+  lbCount.textContent = `${String(lbI+1).padStart(2,'0')} / ${String(lbSet.length).padStart(2,'0')}`;
+}
+function stepLb(d){ lbI = (lbI + d + lbSet.length) % lbSet.length; drawLb(); }
 
-            document.querySelectorAll('.filter-tag').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    toggleFilter(button.dataset.tag, button);
-                });
-            });
-        }
+document.getElementById('lbClose').addEventListener('click',closeLb);
+document.getElementById('lbPrev').addEventListener('click',()=>stepLb(-1));
+document.getElementById('lbNext').addEventListener('click',()=>stepLb(1));
+lb.addEventListener('click',e=>{ if(e.target === lb || e.target.classList.contains('lb-fig')) closeLb(); });
+addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open')) return;
+  if(e.key === 'Escape') closeLb();
+  else if(e.key === 'ArrowLeft') stepLb(-1);
+  else if(e.key === 'ArrowRight') stepLb(1);
+});
 
-        const filterToggle = document.getElementById('filter-toggle');
-        const filterDropdown = document.getElementById('filter-dropdown');
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+const up = document.getElementById('up');
+addEventListener('scroll',()=>{
+  up.classList.toggle('vis', scrollY > innerHeight*0.7);
+},{passive:true});
+up.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
 
-        filterToggle.addEventListener('click', (e) => {
-            filterDropdown.classList.toggle('active');
-            filterToggle.classList.toggle('active');
-        });
+/* ============================================================
+   CURSOR
+   ============================================================ */
+const cursor = document.getElementById('cursor');
+let cx=innerWidth/2, cy=innerHeight/2, tx=cx, ty=cy;
+addEventListener('mousemove',e=>{
+  tx=e.clientX; ty=e.clientY;
+  cursor.classList.remove('off');
+  cursor.classList.toggle('big', !!(e.target.closest && e.target.closest(HIT)));
+});
+addEventListener('mouseout',e=>{if(!e.relatedTarget){cursor.classList.add('off');cursor.classList.remove('big');}});
+addEventListener('blur',()=>{cursor.classList.add('off');cursor.classList.remove('big');});
+(function loop(){
+  cx+=(tx-cx)*.2; cy+=(ty-cy)*.2;
+  cursor.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;
+  requestAnimationFrame(loop);
+})();
 
-        function toggleFilter(tag, button) {
-            button.classList.toggle('active');
-
-            if (activeFilters.includes(tag)) {
-                activeFilters = activeFilters.filter(t => t !== tag);
-            } else {
-                activeFilters.push(tag);
-            }
-
-            updateActiveFiltersDisplay();
-            filterProjects();
-        }
-
-        function updateActiveFiltersDisplay() {
-            const activeFiltersEl = document.getElementById('active-filters');
-            if (activeFilters.length > 0) {
-                activeFiltersEl.textContent = `Active: ${activeFilters.join(', ')}`;
-            } else {
-                activeFiltersEl.textContent = '';
-            }
-        }
-
-        function filterProjects() {
-            if (activeFilters.length === 0) {
-                allProjectElements.forEach(el => el.classList.remove('hidden'));
-                mainContent.classList.remove('filtering');
-            } else {
-                mainContent.classList.add('filtering');
-                allProjectElements.forEach((element, index) => {
-                    const project = projects[index];
-                    const hasMatchingTag = activeFilters.some(filter =>
-                        project.tags && project.tags.includes(filter)
-                    );
-                    if (hasMatchingTag) {
-                        element.classList.remove('hidden');
-                    } else {
-                        element.classList.add('hidden');
-                    }
-                });
-            }
-        }
-
-        const filterClearBtn = document.getElementById('filter-clear');
-        filterClearBtn.addEventListener('click', (e) => {
-            activeFilters = [];
-            document.querySelectorAll('.filter-tag.active').forEach(button => {
-                button.classList.remove('active');
-            });
-            updateActiveFiltersDisplay();
-            filterProjects();
-        });
-
-        function renderProjects() {
-            const projectsToLoad = projects.slice(loadedProjects, loadedProjects + projectsPerLoad);
-
-            projectsToLoad.forEach((project, index) => {
-                const article = document.createElement('article');
-                article.className = 'project-item';
-                article.style.animationDelay = `${index * 0.15}s`;
-                article.dataset.projectId = project.id;
-
-                const mediaElement = project.thumbnailType === 'video'
-                    ? `<video src="${project.thumbnail}" loop muted autoplay playsinline></video>`
-                    : `<img src="${project.thumbnail}" alt="${project.title}" loading="lazy">`;
-
-                article.innerHTML = `
-                    ${mediaElement}
-                    <div class="project-caption">${project.title}</div>
-                `;
-
-                article.addEventListener('click', () => openProject(project.id));
-
-                // Abwechselnd auf linke und rechte Spalte verteilen
-                const globalIndex = loadedProjects + index;
-                if (globalIndex % 2 === 0) {
-                    colLeft.appendChild(article);
-                } else {
-                    colRight.appendChild(article);
-                }
-
-                allProjectElements.push(article);
-            });
-
-            loadedProjects += projectsToLoad.length;
-
-            if (loadedProjects >= projects.length) {
-                document.getElementById('loading').style.display = 'none';
-            }
-
-            attachCursorListeners();
-        }
-
-        renderProjects();
-
-        let isLoading = false;
-        window.addEventListener('scroll', () => {
-            if (isLoading) return;
-
-            const scrollPosition = window.innerHeight + window.scrollY;
-            const threshold = document.body.offsetHeight - 800;
-
-            if (scrollPosition >= threshold && loadedProjects < projects.length) {
-                isLoading = true;
-                setTimeout(() => {
-                    renderProjects();
-                    isLoading = false;
-                }, 400);
-            }
-        });
-
-        // Hide header, filter, and banner on scroll down, show on scroll up
-        let lastScrollTop = 0;
-        const header = document.querySelector('header');
-        const filterContainer = document.querySelector('.filter-container');
-        const wipBanner = document.querySelector('.wip-banner');
-        const scrollThreshold = 100;
-
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-            if (scrollTop > scrollThreshold) {
-                if (scrollTop > lastScrollTop) {
-                    header.style.transform = 'translateY(-100%)';
-                    header.style.opacity = '0';
-                    filterContainer.style.transform = 'translateY(-100%)';
-                    filterContainer.style.opacity = '0';
-                    wipBanner.style.transform = 'translateY(-100%)';
-                    wipBanner.style.opacity = '0';
-                } else {
-                    header.style.transform = 'translateY(0)';
-                    header.style.opacity = '1';
-                    filterContainer.style.transform = 'translateY(0)';
-                    filterContainer.style.opacity = '1';
-                    wipBanner.style.transform = 'translateY(0)';
-                    wipBanner.style.opacity = '1';
-                }
-            } else {
-                header.style.transform = 'translateY(0)';
-                header.style.opacity = '1';
-                filterContainer.style.transform = 'translateY(0)';
-                filterContainer.style.opacity = '1';
-                wipBanner.style.transform = 'translateY(0)';
-                wipBanner.style.opacity = '1';
-            }
-
-            lastScrollTop = scrollTop;
-        }, { passive: true });
-
-        const modal = document.getElementById('project-modal');
-        const modalContent = document.getElementById('modal-content');
-        const closeBtn = document.getElementById('close-modal');
-        const homeLink = document.getElementById('home-link');
-
-        // ── LIGHTBOX STATE ──
-        let lightboxImages = [];
-        let lightboxIndex = 0;
-
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-        const lightboxCaption = document.getElementById('lightbox-caption');
-        const lightboxCounter = document.getElementById('lightbox-counter');
-        const lightboxClose = document.getElementById('lightbox-close');
-        const lightboxPrev = document.getElementById('lightbox-prev');
-        const lightboxNext = document.getElementById('lightbox-next');
-
-        function openLightbox(images, startIndex) {
-            lightboxImages = images;
-            lightboxIndex = startIndex;
-            showLightboxImage();
-            lightbox.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeLightbox() {
-            lightbox.classList.remove('active');
-        }
-
-        function showLightboxImage() {
-            const item = lightboxImages[lightboxIndex];
-            lightboxImg.src = item.src;
-            lightboxImg.alt = item.caption || '';
-            lightboxCaption.textContent = item.caption || '';
-            lightboxCounter.textContent = `${lightboxIndex + 1} / ${lightboxImages.length}`;
-            lightboxPrev.style.visibility = lightboxImages.length > 1 ? 'visible' : 'hidden';
-            lightboxNext.style.visibility = lightboxImages.length > 1 ? 'visible' : 'hidden';
-        }
-
-        lightboxClose.addEventListener('click', closeLightbox);
-        lightboxPrev.addEventListener('click', () => {
-            lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
-            showLightboxImage();
-        });
-        lightboxNext.addEventListener('click', () => {
-            lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
-            showLightboxImage();
-        });
-
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) closeLightbox();
-        });
-
-        function openProject(projectId) {
-            const project = projects.find(p => p.id === projectId);
-            if (!project) return;
-
-            document.querySelector('.filter-container').style.display = 'none';
-
-            const imageList = project.images
-                .map(media => {
-                    if (typeof media === 'string') return { src: media, caption: '', type: 'image' };
-                    return { src: media.src, caption: media.caption || '', type: media.type || 'image' };
-                })
-                .filter(m => m.type !== 'video');
-
-            const mediaHTML = project.images.map((media, i) => {
-                let src, type, caption;
-
-                if (typeof media === 'string') {
-                    src = media; type = 'image'; caption = '';
-                } else {
-                    src = media.src; type = media.type || 'image'; caption = media.caption || '';
-                }
-
-                if (type === 'video') {
-                    return `
-                        <div class="tile">
-                            <video src="${src}" controls loop style="animation-delay: ${i * 0.1}s">
-                                Your browser does not support the video tag.
-                            </video>
-                            ${caption ? `<div class="image-caption">${caption}</div>` : ''}
-                        </div>
-                    `;
-                } else {
-                    const imgIndex = imageList.findIndex(im => im.src === src);
-                    return `
-                        <div class="tile" data-img-index="${imgIndex}" style="animation-delay: ${i * 0.1}s">
-                            <img src="${src}" alt="${project.title}" loading="lazy">
-                            ${caption ? `<div class="image-caption">${caption}</div>` : ''}
-                        </div>
-                    `;
-                }
-            }).join('');
-
-            modalContent.innerHTML = `
-                <div class="project-header">
-                    <h1 class="project-title">${project.title}</h1>
-                    <div class="project-meta">${project.year} — ${project.collaborators || ''} — ${project.location}</div>
-                    <p class="project-description">${project.description}</p>
-                </div>
-                <div class="project-images" id="project-images-grid">
-                    ${mediaHTML}
-                </div>
-            `;
-
-            modalContent.querySelectorAll('.tile[data-img-index]').forEach(tile => {
-                tile.addEventListener('click', () => {
-                    const idx = parseInt(tile.dataset.imgIndex, 10);
-                    openLightbox(imageList, idx);
-                });
-            });
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            modal.scrollTop = 0;
-            attachCursorListeners();
-        }
-
-        function closeProject() {
-            modal.classList.remove('active');
-            closeLightbox();
-            document.body.style.overflow = 'auto';
-            document.querySelector('.filter-container').style.display = 'block';
-        }
-
-        closeBtn.addEventListener('click', closeProject);
-        homeLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            closeProject();
-            closeInfo();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        const infoModal = document.getElementById('info-modal');
-        const infoLink = document.getElementById('info-link');
-        const closeInfoBtn = document.getElementById('close-info');
-
-        function openInfo() {
-            infoModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            infoModal.scrollTop = 0;
-            document.querySelector('.filter-container').style.display = 'none';
-        }
-
-        function closeInfo() {
-            infoModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-            document.querySelector('.filter-container').style.display = 'block';
-        }
-
-        infoLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            openInfo();
-        });
-
-        closeInfoBtn.addEventListener('click', closeInfo);
-
-        document.addEventListener('keydown', (e) => {
-            if (lightbox.classList.contains('active')) {
-                if (e.key === 'ArrowLeft') {
-                    lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
-                    showLightboxImage();
-                } else if (e.key === 'ArrowRight') {
-                    lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
-                    showLightboxImage();
-                } else if (e.key === 'Escape') {
-                    closeLightbox();
-                }
-            } else if (e.key === 'Escape') {
-                closeProject();
-                closeInfo();
-            }
-        });
-
-        window.addEventListener('load', () => {
-            generateFilterTags();
-            attachCursorListeners();
-        });
-    </script>
-
-    <footer>
-        <p><a href="mailto:louis.baurmann@mail.de">louis.baurmann@mail.de</a></p>
-        <p>© 2026 Louis Baurmann</p>
-    </footer>
+route();
+</script>
 </body>
 </html>
